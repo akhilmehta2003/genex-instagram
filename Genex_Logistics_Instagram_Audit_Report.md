@@ -1,14 +1,14 @@
 # INSTAGRAM AUDIT & GROWTH STRATEGY REPORT
 **Document Control:** Confidential B2B Brand Analysis  
-**Prepared For:** Mansingh Jaswal, CEO & Founder, Genex Logistics  
-**Prepared By:** Senior Social Media Strategist & Brand Consultant  
+**Prepared For:**  Genex Logistics  
+**Prepared By:** Akhil Mehta
 **Date:** June 23, 2026  
 
 ---
 
 ## 1. Executive Summary
 
-Genex Logistics (Genex Logisolutions Pvt. Ltd.) is an established, highly capable player in the Indian third-party logistics (3PL) and supply chain market, operating across 28 states with over 800,000 sq. ft. of warehouse space. However, there is a stark disconnect between the company’s actual physical scale and its digital brand footprint on Instagram.
+Genex Logistics (Genex Logisolutions Pvt. Ltd.) is an established, highly capable player in the Indian third-party logistics (3PL) and supply chain market, operating across 28 states. However, there is a stark disconnect between the company’s actual physical scale and its digital brand footprint on Instagram.
 
 Instagram is traditionally viewed as a B2C platform, leading many B2B logistics firms to treat it as an afterthought. This is a critical strategic error. Today, B2B procurement managers, e-commerce founders, and supply chain directors perform digital due diligence across all channels. A weak, unoptimized Instagram profile erodes credibility, while a highly optimized, high-authority channel serves as a powerful trust-builder, social proof engine, and lead generation magnet.
 
