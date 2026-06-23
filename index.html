@@ -1,0 +1,2574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram • genex_logistics</title>
+    <!-- FontAwesome for fallback icons if needed, but we will use SVGs for pixel-perfect matches -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* Instagram Dark Theme Palette */
+            --bg-base: #000000;
+            --bg-surface: #000000;
+            --bg-hover: rgba(255, 255, 255, 0.08);
+            --border-color: #262626;
+            --text-primary: #f5f5f5;
+            --text-secondary: #a8a8a8;
+            --text-link: #0095f6;
+            --text-link-hover: #1877f2;
+            --brand-green: #10b981;
+            --brand-green-hover: #059669;
+            --danger-color: #ed4956;
+            --transition-smooth: all 0.2s ease-in-out;
+            --ig-sidebar-width: 244px;
+        }
+
+        /* Reset & Base Styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-y: scroll;
+        }
+
+        /* App Container */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ---------------------------------------------------- */
+        /* INSTAGRAM ORIGINAL SIDEBAR                           */
+        /* ---------------------------------------------------- */
+        .sidebar {
+            width: var(--ig-sidebar-width);
+            background: #000000;
+            border-right: 1px solid var(--border-color);
+            padding: 2.2rem 0.75rem 1.25rem 0.75rem;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            z-index: 100;
+            transition: width 0.3s ease;
+        }
+
+        .logo-container {
+            padding-left: 0.75rem;
+            margin-bottom: 2.25rem;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .ig-wordmark {
+            width: 103px;
+            filter: invert(1); /* Invert black SVG wordmark to white */
+        }
+
+        .audit-tag {
+            font-size: 0.6rem;
+            color: var(--brand-green);
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            border: 1px solid var(--brand-green);
+            padding: 1px 6px;
+            border-radius: 4px;
+            margin-top: 6px;
+            text-transform: uppercase;
+        }
+
+        .nav-menu {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .nav-item {
+            width: 100%;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem 0.75rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 400;
+            transition: var(--transition-smooth);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .nav-link:hover {
+            background: var(--bg-hover);
+        }
+
+        .nav-link:active {
+            opacity: 0.7;
+        }
+
+        .nav-link.active {
+            font-weight: 700;
+        }
+
+        .nav-link.active svg {
+            stroke-width: 2.5px;
+        }
+
+        .nav-link svg {
+            width: 24px;
+            height: 24px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            flex-shrink: 0;
+        }
+
+        .nav-avatar {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 1.5px solid transparent;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        .nav-link.active .nav-avatar {
+            border-color: var(--text-primary);
+        }
+
+        /* Red Badge for Messages / Inbox */
+        .badge {
+            position: absolute;
+            top: 6px;
+            left: 20px;
+            background: var(--danger-color);
+            color: white;
+            font-size: 0.65rem;
+            font-weight: 700;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #000;
+        }
+
+        .sidebar-footer {
+            margin-top: auto;
+            padding-top: 1rem;
+        }
+
+        /* ---------------------------------------------------- */
+        /* MAIN CONTENT AREA                                    */
+        /* ---------------------------------------------------- */
+        .main-content {
+            margin-left: var(--ig-sidebar-width);
+            flex-grow: 1;
+            min-height: 100vh;
+            width: calc(100% - var(--ig-sidebar-width));
+            background: #000000;
+            display: flex;
+            justify-content: center;
+            padding: 30px 20px 60px 20px;
+        }
+
+        /* Panel Container */
+        .content-panel {
+            width: 100%;
+            max-width: 935px;
+            display: none;
+            animation: fadeIn 0.25s ease-out forwards;
+        }
+
+        .content-panel.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* ---------------------------------------------------- */
+        /* INSTAGRAM PROFILE DETAILS                            */
+        /* ---------------------------------------------------- */
+        .profile-container {
+            width: 100%;
+        }
+
+        .profile-header {
+            display: grid;
+            grid-template-columns: 290px 1fr;
+            gap: 1rem;
+            padding-bottom: 44px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 28px;
+        }
+
+        .profile-avatar-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .avatar-ring {
+            width: 158px;
+            height: 158px;
+            border-radius: 50%;
+            padding: 3px;
+            background: var(--insta-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .profile-avatar-img {
+            width: 100%;
+            height: 100%;
+            background: #000000;
+            border-radius: 50%;
+            padding: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .profile-avatar-img img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .profile-details {
+            display: flex;
+            flex-direction: column;
+            padding-top: 10px;
+        }
+
+        .profile-username-row {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+            margin-bottom: 1.25rem;
+            flex-wrap: wrap;
+        }
+
+        .username {
+            font-size: 1.25rem;
+            font-weight: 400;
+            color: var(--text-primary);
+        }
+
+        .verified-badge {
+            color: #3897f0;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .profile-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-ig-primary {
+            background-color: #0095f6;
+            color: #ffffff;
+            border: none;
+            font-weight: 600;
+            font-size: 0.875rem;
+            padding: 7px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .btn-ig-primary:hover {
+            background-color: #1877f2;
+        }
+
+        .btn-ig-secondary {
+            background-color: #363636;
+            color: var(--text-primary);
+            border: none;
+            font-weight: 600;
+            font-size: 0.875rem;
+            padding: 7px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .btn-ig-secondary:hover {
+            background-color: #262626;
+        }
+
+        .profile-stats-row {
+            display: flex;
+            gap: 40px;
+            margin-bottom: 1.25rem;
+        }
+
+        .stat-item {
+            font-size: 1rem;
+            color: var(--text-primary);
+        }
+
+        .stat-val {
+            font-weight: 600;
+        }
+
+        .profile-bio-container {
+            font-size: 0.875rem;
+            line-height: 1.5;
+            color: var(--text-primary);
+        }
+
+        .bio-title {
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .bio-category {
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .bio-text {
+            white-space: pre-wrap;
+            margin-bottom: 10px;
+        }
+
+        .bio-link {
+            color: #e0f1ff;
+            font-weight: 600;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .bio-link:hover {
+            text-decoration: underline;
+        }
+
+        .bio-link svg {
+            width: 12px;
+            height: 12px;
+            transform: rotate(-45deg);
+        }
+
+        /* B2B Badge elements on Profile Bio */
+        .b2b-badges-container {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+
+        .b2b-badge {
+            background: #121212;
+            border: 1px solid var(--border-color);
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--brand-green);
+        }
+
+        /* ---------------------------------------------------- */
+        /* STORY HIGHLIGHTS LIST                                */
+        /* ---------------------------------------------------- */
+        .highlights-wrapper {
+            padding: 0 10px 24px 10px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 0px;
+        }
+
+        .highlights-container {
+            display: flex;
+            gap: 30px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .highlights-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .highlight-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .highlight-circle {
+            width: 87px;
+            height: 87px;
+            border-radius: 50%;
+            border: 1px solid var(--border-color);
+            padding: 4px;
+            background: #121212;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.1s ease;
+        }
+
+        .highlight-item:hover .highlight-circle {
+            transform: scale(1.03);
+        }
+
+        .highlight-circle-inner {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-primary);
+        }
+
+        .highlight-circle-inner svg {
+            width: 32px;
+            height: 32px;
+        }
+
+        .highlight-label {
+            font-size: 0.75rem;
+            color: var(--text-primary);
+            text-align: center;
+            max-width: 80px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* ---------------------------------------------------- */
+        /* PROFILE TAB BAR                                      */
+        /* ---------------------------------------------------- */
+        .profile-tabs-header {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            border-top: 1px solid transparent;
+            margin-bottom: 0;
+        }
+
+        .tab-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 16px 0;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-top: 1px solid transparent;
+            margin-top: -1px;
+            transition: var(--transition-smooth);
+        }
+
+        .tab-item.active {
+            color: var(--text-primary);
+            border-color: var(--text-primary);
+        }
+
+        .tab-item svg {
+            width: 12px;
+            height: 12px;
+        }
+
+        /* ---------------------------------------------------- */
+        /* POSTS GRID                                           */
+        /* ---------------------------------------------------- */
+        .posts-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 28px;
+            margin-top: 12px;
+        }
+
+        .post-card {
+            position: relative;
+            aspect-ratio: 1 / 1;
+            background: #121212;
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .post-preview {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(15, 45, 89, 0.4) 0%, rgba(0, 0, 0, 0.95) 100%);
+            position: relative;
+        }
+
+        .post-vector {
+            width: 70%;
+            height: 70%;
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .post-card:hover .post-vector {
+            transform: scale(1.04);
+        }
+
+        .post-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            opacity: 0;
+            transition: opacity 0.15s ease;
+        }
+
+        .post-card:hover .post-overlay {
+            opacity: 1;
+        }
+
+        .overlay-stat {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: #ffffff;
+        }
+
+        .overlay-stat svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+            stroke: currentColor;
+        }
+
+        .post-type-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: rgba(0,0,0,0.7);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: var(--brand-green);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        /* ---------------------------------------------------- */
+        /* VIEW 2: INSIGHTS (PROFESSIONAL DASHBOARD)           */
+        /* ---------------------------------------------------- */
+        .insights-header {
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 2rem;
+        }
+
+        .insights-card {
+            background: #121212;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            position: relative;
+        }
+
+        .insights-card-title {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .insights-card-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .insights-card-change {
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .change-up { color: var(--brand-green); }
+        .change-down { color: var(--danger-color); }
+
+        .insights-chart-box {
+            background: #121212;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        /* ---------------------------------------------------- */
+        /* VIEW 3: SIMULATED DIRECT MESSAGES (DM LEAD INBOX)   */
+        /* ---------------------------------------------------- */
+        .inbox-container {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            height: 700px;
+            background: #000000;
+            overflow: hidden;
+        }
+
+        .inbox-sidebar {
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .inbox-sidebar-header {
+            padding: 1.25rem;
+            border-bottom: 1px solid var(--border-color);
+            font-weight: 700;
+            font-size: 1.05rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .inbox-list {
+            flex-grow: 1;
+            overflow-y: auto;
+            list-style: none;
+        }
+
+        .inbox-list-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            border-left: 3px solid transparent;
+        }
+
+        .inbox-list-item:hover {
+            background: rgba(255,255,255,0.03);
+        }
+
+        .inbox-list-item.active {
+            background: rgba(255,255,255,0.05);
+            border-left-color: var(--brand-green);
+        }
+
+        .chat-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #262626;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--brand-green);
+            flex-shrink: 0;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .chat-avatar-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .chat-details {
+            flex-grow: 1;
+            overflow: hidden;
+        }
+
+        .chat-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 2px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-preview {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .chat-dot {
+            width: 8px;
+            height: 8px;
+            background: #0095f6;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .inbox-chat {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            background: #000;
+        }
+
+        .chat-header {
+            padding: 14px 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .chat-header-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .chat-body {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .message-bubble {
+            max-width: 60%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            font-size: 0.875rem;
+            line-height: 1.4;
+        }
+
+        .msg-incoming {
+            background: #262626;
+            color: var(--text-primary);
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+
+        .msg-outgoing {
+            background: #0095f6;
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+
+        .chat-footer {
+            padding: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .chat-input-box {
+            display: flex;
+            align-items: center;
+            border: 1px solid var(--border-color);
+            border-radius: 22px;
+            padding: 8px 16px;
+            background: #000;
+        }
+
+        .chat-input {
+            flex-grow: 1;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            outline: none;
+        }
+
+        .chat-send-btn {
+            background: none;
+            border: none;
+            color: #0095f6;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.875rem;
+            padding-left: 10px;
+        }
+
+        .chat-send-btn:hover {
+            color: var(--text-primary);
+        }
+
+        /* ---------------------------------------------------- */
+        /* VIEW 4: SIMULATED HOME FEED                          */
+        /* ---------------------------------------------------- */
+        .feed-container {
+            max-width: 470px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .feed-post-card {
+            background: #000000;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .feed-post-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px;
+        }
+
+        .feed-post-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1.5px solid var(--brand-green);
+            padding: 1px;
+            background: #000;
+        }
+
+        .feed-post-username {
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .feed-post-time {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-left: auto;
+        }
+
+        .feed-post-media {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            background: linear-gradient(135deg, rgba(15, 45, 89, 0.4) 0%, rgba(0, 0, 0, 0.95) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .feed-post-actions {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 14px 8px 14px;
+        }
+
+        .feed-action-btn {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .feed-action-btn svg {
+            width: 24px;
+            height: 24px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+        }
+
+        .feed-post-likes {
+            padding: 0 14px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .feed-post-caption-box {
+            padding: 0 14px 12px 14px;
+            font-size: 0.875rem;
+            line-height: 1.4;
+        }
+
+        .feed-post-view-comments {
+            color: var(--text-secondary);
+            cursor: pointer;
+            margin-top: 6px;
+            font-size: 0.825rem;
+        }
+
+        /* ---------------------------------------------------- */
+        /* VIEW 5: BEFORE VS AFTER PANEL                        */
+        /* ---------------------------------------------------- */
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            margin-bottom: 2rem;
+        }
+
+        .comp-card {
+            border: 1px solid var(--border-color);
+            background: #121212;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .comp-header {
+            padding: 12px 20px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .comp-header-before { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
+        .comp-header-after { background: rgba(16, 185, 129, 0.15); color: var(--brand-green); }
+
+        .comp-body {
+            padding: 1.5rem;
+        }
+
+        .comp-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .comp-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px;
+            border-radius: 8px;
+            background: #000;
+            border: 1px solid var(--border-color);
+        }
+
+        .comp-thumb {
+            width: 42px;
+            height: 42px;
+            border-radius: 6px;
+            background: #1f1f1f;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .comp-details {
+            flex-grow: 1;
+            overflow: hidden;
+        }
+
+        .comp-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .comp-desc {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .comp-indicator {
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .ind-low { background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2); }
+        .ind-high { background: rgba(16, 185, 129, 0.1); color: var(--brand-green); border: 1px solid rgba(16, 185, 129, 0.2); }
+
+        /* ---------------------------------------------------- */
+        /* MODAL DETAIL DIALOG (IG STYLE)                       */
+        /* ---------------------------------------------------- */
+        .post-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease-in-out;
+            padding: 2rem;
+        }
+
+        .post-modal.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-body {
+            background: #000000;
+            width: 100%;
+            max-width: 935px;
+            height: 600px;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            display: grid;
+            grid-template-columns: 1.15fr 0.85fr;
+            overflow: hidden;
+            transform: scale(0.97);
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .post-modal.active .modal-body {
+            transform: scale(1);
+        }
+
+        .modal-media-pane {
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            border-right: 1px solid var(--border-color);
+            height: 100%;
+        }
+
+        .modal-media-target {
+            width: 80%;
+            height: 80%;
+        }
+
+        .modal-details-pane {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            background: #000;
+        }
+
+        .modal-details-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .modal-details-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1.5px solid var(--brand-green);
+            padding: 1px;
+            background: #000;
+        }
+
+        .modal-details-username {
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .modal-close-btn {
+            margin-left: auto;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.75rem;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .modal-caption-box {
+            flex-grow: 1;
+            padding: 16px;
+            overflow-y: auto;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        .modal-caption-box::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .modal-caption-box::-webkit-scrollbar-thumb {
+            background: #363636;
+            border-radius: 2px;
+        }
+
+        .modal-caption-inline {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .modal-comment-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .modal-actions-bar {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .modal-action-btn-left {
+            display: flex;
+            gap: 16px;
+        }
+
+        .modal-act-btn {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-act-btn svg {
+            width: 24px;
+            height: 24px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+        }
+
+        .modal-act-btn.active svg {
+            fill: currentColor;
+        }
+
+        .modal-act-btn.active.like-btn {
+            color: var(--danger-color);
+            stroke: var(--danger-color);
+        }
+
+        .modal-act-btn.active.save-btn {
+            color: var(--text-primary);
+            stroke: var(--text-primary);
+        }
+
+        .modal-likes-metric {
+            padding: 8px 16px 4px 16px;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .modal-time-stamp {
+            padding: 0 16px 12px 16px;
+            font-size: 0.725rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        /* Float alert */
+        .toast-alert {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: #262626;
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px 20px;
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transform: translateY(120px);
+            opacity: 0;
+            transition: var(--transition-smooth);
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .toast-alert.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast-icon {
+            color: var(--brand-green);
+            display: flex;
+        }
+
+        /* ---------------------------------------------------- */
+        /* RESPONSIVE LAYOUT                                    */
+        /* ---------------------------------------------------- */
+        @media (max-width: 1024px) {
+            :root {
+                --ig-sidebar-width: 72px;
+            }
+
+            .sidebar {
+                align-items: center;
+                padding-top: 1.5rem;
+            }
+
+            .ig-wordmark, .audit-tag, .nav-label, .sidebar-footer {
+                display: none;
+            }
+
+            .logo-container {
+                padding-left: 0;
+                margin-bottom: 2rem;
+            }
+
+            .nav-link {
+                justify-content: center;
+                padding: 0.75rem;
+            }
+
+            .nav-link svg {
+                width: 26px;
+                height: 26px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .app-container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                display: none;
+            }
+
+            /* Bottom Mobile Nav bar */
+            .mobile-nav {
+                display: flex;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                width: 100vw;
+                height: 50px;
+                background: #000;
+                border-top: 1px solid var(--border-color);
+                z-index: 900;
+                justify-content: space-around;
+                align-items: center;
+            }
+
+            .mobile-nav-link {
+                color: var(--text-primary);
+                text-decoration: none;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .mobile-nav-link svg {
+                width: 24px;
+                height: 24px;
+                fill: none;
+                stroke: currentColor;
+                stroke-width: 2;
+            }
+
+            .mobile-nav-link.active {
+                font-weight: 700;
+            }
+
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+                padding: 20px 10px 70px 10px;
+            }
+
+            .profile-header {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+                justify-items: center;
+                text-align: center;
+            }
+
+            .profile-username-row {
+                justify-content: center;
+            }
+
+            .profile-stats-row {
+                justify-content: center;
+                gap: 20px;
+            }
+
+            .b2b-badges-container {
+                justify-content: center;
+            }
+
+            .posts-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+            }
+
+            .inbox-container {
+                grid-template-columns: 1fr;
+                height: calc(100vh - 120px);
+            }
+
+            .inbox-sidebar.hide-mobile {
+                display: none;
+            }
+
+            .inbox-chat.hide-mobile {
+                display: none;
+            }
+
+            .comparison-grid, .insights-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-body {
+                grid-template-columns: 1fr;
+                height: 90%;
+            }
+
+            .modal-media-pane {
+                height: 50%;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+            }
+
+            .modal-details-pane {
+                height: 50%;
+            }
+        }
+
+        /* Default non-mobile navigation setup */
+        .mobile-nav {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <!-- ORIGINAL INSTAGRAM SIDEBAR (DESKTOP) -->
+        <aside class="sidebar">
+            <div class="logo-container">
+                <!-- Instagram script logo wordmark -->
+                <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/Instagram_wordmark.svg" alt="Instagram Logo" class="ig-wordmark">
+                <span class="audit-tag">Genex Audit</span>
+            </div>
+
+            <nav class="sidebar-nav">
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a onclick="switchPanel('feed-panel')" class="nav-link" id="link-feed-panel">
+                            <!-- Home Icon -->
+                            <svg viewBox="0 0 24 24"><path d="M4.582 19.986V10.22L12 4.417l7.418 5.803v9.766H13.78v-5.268h-3.56v5.268z"/></svg>
+                            <span class="nav-label">Home</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a onclick="switchPanel('comparison-panel')" class="nav-link" id="link-comparison-panel">
+                            <!-- Search/Compare Icon -->
+                            <svg viewBox="0 0 24 24"><circle cx="11.5" cy="11.5" r="7.5L11.5 4"/><path d="M21 21l-5.2-5.2"/></svg>
+                            <span class="nav-label">Before vs After</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a onclick="switchPanel('analytics-panel')" class="nav-link" id="link-analytics-panel">
+                            <!-- Explore/Insights Icon -->
+                            <svg viewBox="0 0 24 24"><polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5"/><polyline points="2 8.5 12 15 22 8.5"/><line x1="12" y1="15" x2="12" y2="22"/></svg>
+                            <span class="nav-label">Insights</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a onclick="switchPanel('inbox-panel')" class="nav-link" id="link-inbox-panel">
+                            <!-- Messages/Leads Icon -->
+                            <svg viewBox="0 0 24 24"><path d="M22 2L11 13M22 2L15 22L11 13L2 9L22 2z"/></svg>
+                            <span class="badge" id="message-badge">3</span>
+                            <span class="nav-label">Messages</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a onclick="switchPanel('roadmap-panel')" class="nav-link" id="link-roadmap-panel">
+                            <!-- Create/Roadmap Icon -->
+                            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+                            <span class="nav-label">Roadmap</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a onclick="switchPanel('instagram-panel')" class="nav-link active" id="link-instagram-panel">
+                            <!-- Profile picture avatar link -->
+                            <img src="profile-photo.jpg" alt="Profile avatar" class="nav-avatar">
+                            <span class="nav-label">Profile</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a class="nav-link" onclick="triggerAlert('Exporting full CEO Strategy deck PDF...')" style="padding: 0.5rem 0.75rem;">
+                    <!-- Settings/More Icon -->
+                    <svg viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+                    <span class="nav-label">Strategy Deck</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- BOTTOM MOBILE NAV BAR -->
+        <nav class="mobile-nav">
+            <a onclick="switchPanel('feed-panel')" class="mobile-nav-link" id="mlink-feed-panel">
+                <svg viewBox="0 0 24 24"><path d="M4.582 19.986V10.22L12 4.417l7.418 5.803v9.766H13.78v-5.268h-3.56v5.268z"/></svg>
+            </a>
+            <a onclick="switchPanel('comparison-panel')" class="mobile-nav-link" id="mlink-comparison-panel">
+                <svg viewBox="0 0 24 24"><circle cx="11.5" cy="11.5" r="7.5"/><path d="M21 21l-5.2-5.2"/></svg>
+            </a>
+            <a onclick="switchPanel('inbox-panel')" class="mobile-nav-link" id="mlink-inbox-panel">
+                <svg viewBox="0 0 24 24"><path d="M22 2L11 13M22 2L15 22L11 13L2 9L22 2z"/></svg>
+            </a>
+            <a onclick="switchPanel('roadmap-panel')" class="mobile-nav-link" id="mlink-roadmap-panel">
+                <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+            </a>
+            <a onclick="switchPanel('instagram-panel')" class="mobile-nav-link active" id="mlink-instagram-panel">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10"/></svg>
+            </a>
+        </nav>
+
+        <!-- MAIN WINDOW CONTAINER -->
+        <main class="main-content">
+
+            <!-- ---------------------------------------------------- -->
+            <!-- PANEL 1: INSTAGRAM PROFILE (MAIN VIEW)               -->
+            <!-- ---------------------------------------------------- -->
+            <section class="content-panel active" id="instagram-panel">
+                <div class="profile-container">
+                    
+                    <!-- Profile Header Details -->
+                    <div class="profile-header">
+                        <div class="profile-avatar-wrapper">
+                            <div class="avatar-ring" onclick="triggerAlert('Playing Stories: Latest Warehouse automation timelapses!')">
+                                <div class="profile-avatar-img">
+                                    <img src="profile-photo.jpg" alt="Genex Logistics Logo">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="profile-details">
+                            <div class="profile-username-row">
+                                <h2 class="username">genex_logistics</h2>
+                                <span class="verified-badge" title="Verified B2B Corporate Page">
+                                    <!-- Verified Circle Check -->
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="#0095f6"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                                </span>
+                                <div class="profile-actions">
+                                    <button class="btn-ig-primary" onclick="triggerAlert('Following genex_logistics')">Follow</button>
+                                    <button class="btn-ig-secondary" onclick="switchPanel('inbox-panel')">Message</button>
+                                    <button class="btn-ig-secondary" onclick="triggerAlert('Sending email to growth@genexlogistics.in')">Email</button>
+                                </div>
+                            </div>
+
+                            <div class="profile-stats-row">
+                                <span class="stat-item"><span class="stat-val">12</span> posts</span>
+                                <span class="stat-item"><span class="stat-val">12.8k</span> followers</span>
+                                <span class="stat-item"><span class="stat-val">312</span> following</span>
+                            </div>
+
+                            <div class="profile-bio-container">
+                                <h3 class="bio-title">Genex Logistics</h3>
+                                <div class="bio-category">Logistics & Supply Chain</div>
+                                <div class="bio-text">🚚 Tech-Driven 3PL & Contract Logistics Solutions
+📍 Pan-India Warehousing | 28 States Network
+💻 Advanced WMS, Real-Time Tracking & Distribution
+💼 Seamlessly scaling e-commerce & retail brands</div>
+                                
+                                <a href="#" class="bio-link" onclick="event.preventDefault(); switchPanel('inbox-panel'); triggerAlert('Let\'s chat: Requesting a quote in Messages!');">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                                    genexlogistics.in/quote
+                                </a>
+
+                                <div class="b2b-badges-container">
+                                    <div class="b2b-badge">📦 800k+ Sq.Ft.</div>
+                                    <div class="b2b-badge">🇮🇳 28 States</div>
+                                    <div class="b2b-badge">🛡️ ISO 9001 Cert</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Story Highlights Row -->
+                    <div class="highlights-wrapper">
+                        <div class="highlights-container">
+                            <div class="highlight-item" onclick="triggerAlert('Playing Stories: Warehouses')">
+                                <div class="highlight-circle"><div class="highlight-circle-inner"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/><path d="M3 10V3a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v7"/></svg></div></div>
+                                <span class="highlight-label">Warehouses</span>
+                            </div>
+                            <div class="highlight-item" onclick="triggerAlert('Playing Stories: Clients')">
+                                <div class="highlight-circle"><div class="highlight-circle-inner"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div></div>
+                                <span class="highlight-label">Clients</span>
+                            </div>
+                            <div class="highlight-item" onclick="triggerAlert('Playing Stories: Case Studies')">
+                                <div class="highlight-circle"><div class="highlight-circle-inner"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg></div></div>
+                                <span class="highlight-label">Case Studies</span>
+                            </div>
+                            <div class="highlight-item" onclick="triggerAlert('Playing Stories: Technology')">
+                                <div class="highlight-circle"><div class="highlight-circle-inner"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 15h3M1 9h3M1 15h3"/></svg></div></div>
+                                <span class="highlight-label">Technology</span>
+                            </div>
+                            <div class="highlight-item" onclick="triggerAlert('Playing Stories: Team')">
+                                <div class="highlight-circle"><div class="highlight-circle-inner"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M14.31 8l5.74 9.94M9.69 8h11.48M7.38 12l5.74-9.94M9.69 16L3.95 6.06M14.31 16H2.83M16.62 12l-5.74 9.94"/></svg></div></div>
+                                <span class="highlight-label">Team</span>
+                            </div>
+                            <div class="highlight-item" onclick="triggerAlert('Playing Stories: Testimonials')">
+                                <div class="highlight-circle"><div class="highlight-circle-inner"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div></div>
+                                <span class="highlight-label">Reviews</span>
+                            </div>
+                            <div class="highlight-item" onclick="triggerAlert('Playing Stories: Network')">
+                                <div class="highlight-circle"><div class="highlight-circle-inner"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg></div></div>
+                                <span class="highlight-label">Network</span>
+                            </div>
+                            <div class="highlight-item" onclick="triggerAlert('Playing Stories: Success')">
+                                <div class="highlight-circle"><div class="highlight-circle-inner"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18M4 22h16M10 14.66V17c0 .55-.45 1-1 1H4v2h16v-2h-5c-.55 0-1-.45-1-1v-2.34M12 2a5 5 0 0 0-5 5v5a5 5 0 0 0 10 0V7a5 5 0 0 0-5-5z"/></svg></div></div>
+                                <span class="highlight-label">Success</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Profile Tabs Navigation -->
+                    <div class="profile-tabs-header">
+                        <div class="tab-item active" onclick="switchPanel('instagram-panel')">
+                            <!-- Posts Grid Icon -->
+                            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" fill="none" stroke="currentColor" stroke-width="2"/><rect x="14" y="3" width="7" height="7" fill="none" stroke="currentColor" stroke-width="2"/><rect x="14" y="14" width="7" height="7" fill="none" stroke="currentColor" stroke-width="2"/><rect x="3" y="14" width="7" height="7" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+                            Posts
+                        </div>
+                        <div class="tab-item" onclick="switchPanel('comparison-panel')">
+                            <!-- Compare Icon -->
+                            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/></svg>
+                            Before / After
+                        </div>
+                        <div class="tab-item" onclick="switchPanel('analytics-panel')">
+                            <!-- Insights Icon -->
+                            <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                            Insights
+                        </div>
+                        <div class="tab-item" onclick="switchPanel('roadmap-panel')">
+                            <!-- Checklist Icon -->
+                            <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                            Roadmap
+                        </div>
+                    </div>
+
+                    <!-- Post Grid Display -->
+                    <div class="posts-grid" id="postsGrid">
+                        <!-- Posts list dynamically loaded by JavaScript -->
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- ---------------------------------------------------- -->
+            <!-- PANEL 2: SIMULATED INSTAGRAM FEED                    -->
+            <!-- ---------------------------------------------------- -->
+            <section class="content-panel" id="feed-panel">
+                <div class="feed-container" id="feedPostsGrid">
+                    <!-- Dynamic posts scrolling timeline -->
+                </div>
+            </section>
+
+            <!-- ---------------------------------------------------- -->
+            <!-- PANEL 3: PERFORMANCE INSIGHTS (IG METRIC DASHBOARD)   -->
+            <!-- ---------------------------------------------------- -->
+            <section class="content-panel" id="analytics-panel">
+                <div class="insights-header">
+                    <h2>Professional Dashboard</h2>
+                    <p style="color:var(--text-secondary); font-size:0.875rem; margin-top:4px;">Genex Logistics • Last 30 Days transformation results</p>
+                </div>
+
+                <div class="insights-grid">
+                    <div class="insights-card">
+                        <div class="insights-card-title">B2B Leads (RFPs)</div>
+                        <div class="insights-card-value">34</div>
+                        <div class="insights-card-change change-up">▲ +310% in last 30 days</div>
+                    </div>
+                    <div class="insights-card">
+                        <div class="insights-card-title">Accounts Reached</div>
+                        <div class="insights-card-value">84.3k</div>
+                        <div class="insights-card-change change-up">▲ +142.8% vs previous month</div>
+                    </div>
+                    <div class="insights-card">
+                        <div class="insights-card-title">Engagement Rate</div>
+                        <div class="insights-card-value">4.8%</div>
+                        <div class="insights-card-change change-up">▲ +4,700% vs baseline (0.1%)</div>
+                    </div>
+                </div>
+
+                <!-- RFP Growth Chart -->
+                <div class="insights-chart-box">
+                    <h3 style="margin-bottom:1.5rem; font-size:0.95rem; font-weight:600; text-transform:uppercase;">RFP Inbound Conversions (Actual vs Projected)</h3>
+                    <div style="width:100%; height:260px;">
+                        <svg viewBox="0 0 500 220" style="width:100%; height:100%;">
+                            <line x1="50" y1="20" x2="480" y2="20" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+                            <line x1="50" y1="70" x2="480" y2="70" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+                            <line x1="50" y1="120" x2="480" y2="120" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+                            <line x1="50" y1="170" x2="480" y2="170" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+                            
+                            <text x="15" y="25" fill="#9ca3af" font-size="10">40 RFPs</text>
+                            <text x="15" y="75" fill="#9ca3af" font-size="10">25 RFPs</text>
+                            <text x="15" y="125" fill="#9ca3af" font-size="10">10 RFPs</text>
+                            <text x="25" y="175" fill="#9ca3af" font-size="10">0</text>
+                            
+                            <rect x="80" y="155" width="40" height="15" fill="#ed4956" rx="4"/>
+                            <text x="83" y="145" fill="#ed4956" font-size="10" font-weight="bold">2 (Base)</text>
+                            
+                            <rect x="180" y="110" width="40" height="60" fill="#10b981" opacity="0.6" rx="4"/>
+                            <text x="188" y="100" fill="#f3f4f6" font-size="10">12 (M1)</text>
+                            
+                            <rect x="280" y="60" width="40" height="110" fill="#10b981" opacity="0.8" rx="4"/>
+                            <text x="288" y="50" fill="#f3f4f6" font-size="10">24 (M2)</text>
+                            
+                            <rect x="380" y="30" width="40" height="140" fill="#10b981" rx="4"/>
+                            <text x="388" y="20" fill="#10b981" font-size="10" font-weight="bold">34 (M3)</text>
+                            
+                            <text x="75" y="195" fill="#9ca3af" font-size="10">Baseline</text>
+                            <text x="175" y="195" fill="#9ca3af" font-size="10">Month 1</text>
+                            <text x="275" y="195" fill="#9ca3af" font-size="10">Month 2</text>
+                            <text x="375" y="195" fill="#9ca3af" font-size="10">Month 3</text>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="insights-chart-box">
+                    <h3 style="margin-bottom:1rem; font-size:0.95rem;">Conversion Acceleration Key Ratios</h3>
+                    <div style="display:flex; flex-direction:column; gap:1.25rem; margin-top:1rem;">
+                        <div>
+                            <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:4px;">
+                                <span>Profile View-to-Click Conversion</span>
+                                <span style="color:var(--brand-green); font-weight:700;">8.4%</span>
+                            </div>
+                            <div style="width:100%; height:6px; background:#262626; border-radius:3px;">
+                                <div style="width:84%; height:100%; background:var(--brand-green); border-radius:3px;"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:4px;">
+                                <span>Lead Magnet Download Conversion</span>
+                                <span style="color:var(--brand-green); font-weight:700;">14.2%</span>
+                            </div>
+                            <div style="width:100%; height:6px; background:#262626; border-radius:3px;">
+                                <div style="width:68%; height:100%; background:var(--brand-green); border-radius:3px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ---------------------------------------------------- -->
+            <!-- PANEL 4: DIRECT MESSAGES (B2B SALES INBOX)            -->
+            <!-- ---------------------------------------------------- -->
+            <section class="content-panel" id="inbox-panel">
+                <div class="inbox-container">
+                    
+                    <!-- Inbox Sidebar list -->
+                    <div class="inbox-sidebar" id="inboxSidebar">
+                        <div class="inbox-sidebar-header">
+                            <span>genex_logistics</span>
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4z"/></svg>
+                        </div>
+                        <ul class="inbox-list" id="chatListContainer">
+                            <!-- Chats list loaded dynamically -->
+                        </ul>
+                    </div>
+
+                    <!-- Chat window details -->
+                    <div class="inbox-chat" id="chatWindow">
+                        <div class="chat-header">
+                            <div class="chat-avatar" id="activeChatAvatar">A</div>
+                            <div class="chat-header-name" id="activeChatName">Active Conversation</div>
+                        </div>
+                        <div class="chat-body" id="chatBodyContainer">
+                            <!-- Messages bubbles loaded here -->
+                        </div>
+                        <div class="chat-footer">
+                            <form class="chat-input-box" onsubmit="sendSimulatedMessage(event)">
+                                <input type="text" class="chat-input" id="chatMessageInput" placeholder="Message...">
+                                <button type="submit" class="chat-send-btn">Send</button>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- ---------------------------------------------------- -->
+            <!-- PANEL 5: BEFORE VS AFTER COMPARISON PANEL            -->
+            <!-- ---------------------------------------------------- -->
+            <section class="content-panel" id="comparison-panel">
+                <div class="comparison-grid">
+                    
+                    <!-- BEFORE SECTION -->
+                    <div class="comp-card">
+                        <div class="comp-header comp-header-before">
+                            Current Baseline Instagram
+                        </div>
+                        <div class="comp-body">
+                            <div class="comp-list">
+                                <div class="comp-item">
+                                    <div class="comp-thumb" style="background:#5c2529;">🎄</div>
+                                    <div class="comp-details">
+                                        <div class="comp-title">Holiday Wishes Card</div>
+                                        <div class="comp-desc">Stock templates with unbranded formatting.</div>
+                                    </div>
+                                    <span class="comp-indicator ind-low">0 Leads</span>
+                                </div>
+                                <div class="comp-item">
+                                    <div class="comp-thumb" style="background:#5c4725;">📜</div>
+                                    <div class="comp-details">
+                                        <div class="comp-title">Generic Corporate Quotes</div>
+                                        <div class="comp-desc">Calibri text cards with low business credibility.</div>
+                                    </div>
+                                    <span class="comp-indicator ind-low">No Trust</span>
+                                </div>
+                                <div class="comp-item">
+                                    <div class="comp-thumb" style="background:#25485c;">⚙️</div>
+                                    <div class="comp-details">
+                                        <div class="comp-title">Basic Logistics Image Repost</div>
+                                        <div class="comp-desc">Uncropped industry news screenshots.</div>
+                                    </div>
+                                    <span class="comp-indicator ind-low">No Conversion</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AFTER SECTION -->
+                    <div class="comp-card">
+                        <div class="comp-header comp-header-after">
+                            Optimized B2B Platform
+                        </div>
+                        <div class="comp-body">
+                            <div class="comp-list">
+                                <div class="comp-item">
+                                    <div class="comp-thumb" style="background:#135942;">🏭</div>
+                                    <div class="comp-details">
+                                        <div class="comp-title">Automated Warehouse Video</div>
+                                        <div class="comp-desc">Timelapse showing layout optimizations.</div>
+                                    </div>
+                                    <span class="comp-indicator ind-high">High Authority</span>
+                                </div>
+                                <div class="comp-item">
+                                    <div class="comp-thumb" style="background:#135942;">🤝</div>
+                                    <div class="comp-details">
+                                        <div class="comp-title">98% On-Time Delivery Case Study</div>
+                                        <div class="comp-desc">Data slides showing cost drop of -22% overhead.</div>
+                                    </div>
+                                    <span class="comp-indicator ind-high">Pre-sells Leads</span>
+                                </div>
+                                <div class="comp-item">
+                                    <div class="comp-thumb" style="background:#135942;">🧠</div>
+                                    <div class="comp-details">
+                                        <div class="comp-title">CEO Thought Leadership Reels</div>
+                                        <div class="comp-desc">Mansingh Jaswal speaks on supply chain logic.</div>
+                                    </div>
+                                    <span class="comp-indicator ind-high">Authority Position</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Outcomes summary -->
+                <div class="insights-chart-box" style="padding:0; overflow:hidden;">
+                    <h3 style="padding:1.25rem; border-bottom:1px solid var(--border-color); font-size:0.95rem;">Expected Business Outcomes Summary</h3>
+                    <table style="width:100%; border-collapse:collapse; font-size:0.9rem; text-align:left;">
+                        <thead>
+                            <tr style="background:#121212; border-bottom:1px solid var(--border-color);">
+                                <th style="padding:1rem 1.25rem; color:var(--text-secondary);">Metric Pillar</th>
+                                <th style="padding:1rem 1.25rem; color:var(--text-secondary);">Before Baseline</th>
+                                <th style="padding:1rem 1.25rem; color:var(--text-secondary);">After Optimization</th>
+                                <th style="padding:1rem 1.25rem; color:var(--text-secondary);">Business Return</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="border-bottom:1px solid var(--border-color);">
+                                <td style="padding:1rem 1.25rem; font-weight:600;">Monthly Inbound Leads</td>
+                                <td style="padding:1rem 1.25rem; color:#ef4444;">~0 RFPs</td>
+                                <td style="padding:1rem 1.25rem; color:var(--brand-green); font-weight:700;">10-12 RFPs</td>
+                                <td style="padding:1rem 1.25rem;">Accelerated organic pipeline acquisition.</td>
+                            </tr>
+                            <tr style="border-bottom:1px solid var(--border-color);">
+                                <td style="padding:1rem 1.25rem; font-weight:600;">Sales cycle length</td>
+                                <td style="padding:1rem 1.25rem;">90-120 days</td>
+                                <td style="padding:1rem 1.25rem; color:var(--brand-green); font-weight:700;">45-60 days</td>
+                                <td style="padding:1rem 1.25rem;">Social proof does the initial pre-selling work.</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:1rem 1.25rem; font-weight:600;">Brand Perception</td>
+                                <td style="padding:1rem 1.25rem;">Local contractor</td>
+                                <td style="padding:1rem 1.25rem; color:var(--brand-green); font-weight:700;">Tech-first 3PL leader</td>
+                                <td style="padding:1rem 1.25rem;">Allows bidding on larger enterprise logistics audits.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- ---------------------------------------------------- -->
+            <!-- PANEL 6: CHECKLIST STRATEGY ROADMAP                  -->
+            <!-- ---------------------------------------------------- -->
+            <section class="content-panel" id="roadmap-panel">
+                <div class="insights-header">
+                    <h2>Growth Strategy Roadmap</h2>
+                    <p style="color:var(--text-secondary); font-size:0.875rem; margin-top:4px;">Genex Logistics • Implementation schedule</p>
+                </div>
+
+                <div style="display:flex; flex-direction:column; gap:24px;">
+                    <!-- Roadmap step 1 -->
+                    <div style="background:#121212; border:1px solid var(--border-color); border-radius:12px; padding:1.5rem;">
+                        <h3 style="color:var(--brand-green); font-size:1.1rem; margin-bottom:1rem;">Phase 1: Quick Wins (0 - 30 Days)</h3>
+                        <p style="font-size:0.875rem; line-height:1.5; color:var(--text-secondary); margin-bottom:1rem;">
+                            Establish visual consistency, update circular profile image, draft high-conversion bio text, and implement a B2B optimized landing page in bio. Pin 3 intro posts to grid top.
+                        </p>
+                        <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:12px; font-size:0.8rem; background:#000; padding:1rem; border-radius:8px;">
+                            <div><b>Key Milestone:</b> Bio Refactoring & Linktree Setup</div>
+                            <div><b>Expected Return:</b> +140% website click rate</div>
+                        </div>
+                    </div>
+
+                    <!-- Roadmap step 2 -->
+                    <div style="background:#121212; border:1px solid var(--border-color); border-radius:12px; padding:1.5rem;">
+                        <h3 style="color:var(--brand-green); font-size:1.1rem; margin-bottom:1rem;">Phase 2: Core Expansion (30 - 90 Days)</h3>
+                        <p style="font-size:0.875rem; line-height:1.5; color:var(--text-secondary); margin-bottom:1rem;">
+                            Deploy on-site video shoots. Draft short-form Reels demonstrating clean warehouses, cargo sorting speeds, and advanced barcode scanning software. Publish first guide PDF lead magnet.
+                        </p>
+                        <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:12px; font-size:0.8rem; background:#000; padding:1rem; border-radius:8px;">
+                            <div><b>Key Milestone:</b> Weekly "Inside the Hub" Video Reels</div>
+                            <div><b>Expected Return:</b> +320% organic search impressions</div>
+                        </div>
+                    </div>
+
+                    <!-- Roadmap step 3 -->
+                    <div style="background:#121212; border:1px solid var(--border-color); border-radius:12px; padding:1.5rem;">
+                        <h3 style="color:var(--brand-green); font-size:1.1rem; margin-bottom:1rem;">Phase 3: Scale Authority (90 - 365 Days)</h3>
+                        <p style="font-size:0.875rem; line-height:1.5; color:var(--text-secondary); margin-bottom:1rem;">
+                            Record Mansingh Jaswal's industry commentary videos (Reels). Produce video case studies directly at client sites. Deploy Meta retargeting ads to supply chain heads.
+                        </p>
+                        <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:12px; font-size:0.8rem; background:#000; padding:1rem; border-radius:8px;">
+                            <div><b>Key Milestone:</b> CEO Thought Leadership & Paid Ads</div>
+                            <div><b>Expected Return:</b> 35% shorter enterprise sales timeline</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+    </div>
+
+    <!-- POST GRID MODAL WINDOW (NATIVE IG STYLE DETAIL DIALOG) -->
+    <div class="post-modal" id="postModal">
+        <div class="modal-body">
+            
+            <!-- Media Panel -->
+            <div class="modal-media-pane">
+                <div class="modal-media-target" id="modalMediaContainer">
+                    <!-- SVG vector copied here -->
+                </div>
+            </div>
+
+            <!-- Profile and Details Panel -->
+            <div class="modal-details-pane">
+                
+                <div class="modal-details-header">
+                    <img src="profile-photo.jpg" alt="Profile avatar" class="modal-details-avatar">
+                    <span class="modal-details-username">genex_logistics</span>
+                    <span style="color:#3897f0; display:inline-flex; align-items:center;">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                    </span>
+                    <button class="modal-close-btn" onclick="closePostModal()">&times;</button>
+                </div>
+
+                <div class="modal-caption-box">
+                    <div class="modal-caption-inline">
+                        <span class="modal-details-username" style="margin-right:6px;">genex_logistics</span>
+                        <span id="modalCaptionTarget">Caption text goes here.</span>
+                    </div>
+
+                    <!-- Comments block -->
+                    <div id="modalCommentsTarget">
+                        <!-- Comments generated dynamically -->
+                    </div>
+                </div>
+
+                <!-- Action icons bar -->
+                <div class="modal-actions-bar">
+                    <div class="modal-action-btn-left">
+                        <button class="modal-act-btn like-btn" id="modalLikeBtn" onclick="togglePostLike()">
+                            <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                        </button>
+                        <button class="modal-act-btn" onclick="triggerAlert('Comment feature is enabled! Direct messaging is available.')">
+                            <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+                        </button>
+                        <button class="modal-act-btn" onclick="sharePostSimulated()">
+                            <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                        </button>
+                    </div>
+                    <button class="modal-act-btn save-btn" id="modalSaveBtn" onclick="togglePostSave()">
+                        <svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+                    </button>
+                </div>
+
+                <div class="modal-likes-metric" id="modalLikesMetricTarget">142 likes</div>
+                <div class="modal-time-stamp" id="modalTimeTarget">2 days ago</div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <!-- TOAST FLOATING ALERTS -->
+    <div class="toast-alert" id="toastAlert">
+        <div class="toast-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div id="toastMessageTarget">Success</div>
+    </div>
+
+    <!-- MOCK DATABASE & LOGIC -->
+    <script>
+        const mockPosts = [
+            {
+                id: 1,
+                badge: "Warehouses",
+                likes: 184,
+                commentsCount: 14,
+                title: "Warehouse Showcase",
+                time: "2 days ago",
+                svg: `<svg class="post-vector" viewBox="0 0 200 200">
+                    <defs>
+                        <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#10b981" />
+                            <stop offset="100%" stop-color="#0f2d59" />
+                        </linearGradient>
+                    </defs>
+                    <rect width="200" height="200" fill="url(#g1)" rx="10"/>
+                    <path d="M 0 120 Q 50 150 100 120 T 200 120 L 200 200 L 0 200 Z" fill="rgba(7,10,19,0.3)"/>
+                    <polygon points="100,40 160,70 100,100 40,70" fill="rgba(255,255,255,0.15)" stroke="#ffffff" stroke-width="2"/>
+                    <line x1="40" y1="70" x2="40" y2="150" stroke="#ffffff" stroke-width="2"/>
+                    <line x1="100" y1="100" x2="100" y2="175" stroke="#ffffff" stroke-width="2"/>
+                    <line x1="160" y1="70" x2="160" y2="150" stroke="#ffffff" stroke-width="2"/>
+                    <polygon points="100,75 160,105 100,135 40,105" fill="none" stroke="#ffffff" stroke-dasharray="2" stroke-width="1.5"/>
+                    <polygon points="100,110 160,140 100,170 40,140" fill="none" stroke="#ffffff" stroke-width="2"/>
+                    <polygon points="65,85 85,95 70,103 50,93" fill="#10b981" stroke="#ffffff" stroke-width="1"/>
+                    <polygon points="85,95 85,115 70,123 70,103" fill="#0d9488" stroke="#ffffff" stroke-width="1"/>
+                    <polygon points="50,93 70,103 70,123 50,113" fill="#0f2d59" stroke="#ffffff" stroke-width="1"/>
+                </svg>`,
+                caption: "🚨 <b>INSIDE THE HUB: Operational Excellence in Action</b> 🚨<br><br>Take a virtual walk through our advanced multi-user warehousing facilities. Operating over 800,000+ Sq.Ft. of prime space across 28 states, our hubs integrate top-tier safety standards and automated layout logic.<br><br>💡 <b>Highlights:</b><br>• Fully integrated WMS barcoding tracking<br>• Temperature-controlled secure zones<br>• ISO 9001:2015 certified protocols<br><br>Looking to optimize your storage footprint? Partner with India's technology-first 3PL leader. <b>Click the link in bio to get a customized quote.</b><br><br>#GenexLogistics #3PL #WarehousingIndia #SupplyChainTech #ContractLogistics #WarehouseManagement",
+                comments: [
+                    { user: "delhifounder", text: "Impressive facility design. What is your turnaround time for custom onboarding?" },
+                    { user: "supplychainpro_in", text: "Top-tier cleanliness standard. Love the barcode automation flow." }
+                ]
+            },
+            {
+                id: 2,
+                badge: "Case Studies",
+                likes: 215,
+                commentsCount: 19,
+                title: "Client Success Story",
+                time: "4 days ago",
+                svg: `<svg class="post-vector" viewBox="0 0 200 200">
+                    <rect width="200" height="200" fill="#0a192f" rx="10"/>
+                    <circle cx="100" cy="90" r="50" fill="none" stroke="rgba(16, 185, 129, 0.15)" stroke-width="8"/>
+                    <circle cx="100" cy="90" r="50" fill="none" stroke="#10b981" stroke-width="8" stroke-dasharray="210 100"/>
+                    <text x="100" y="98" fill="#ffffff" font-size="24" font-weight="bold" text-anchor="middle" font-family="'Outfit', sans-serif">98%</text>
+                    <text x="100" y="165" fill="#9ca3af" font-size="11" font-weight="600" text-anchor="middle">ON-TIME DELIVERY ACCURACY</text>
+                </svg>`,
+                caption: "📈 <b>CASE STUDY: Scaling D2C Distribution to 98% On-Time Rates</b> 📈<br><br>When a leading consumer brand scaled from 1,000 to 50,000 monthly orders, their legacy shipping network bottlenecked. Genex stepped in to overhaul their warehouse placement, placing stock strategically across multi-state contract locations.<br><br>⚙️ <b>The Outcomes:</b><br>• <b>98.4%</b> on-time delivery metric achieved<br>• <b>22%</b> warehouse overhead cost reduction<br>• Real-time stock sync via custom API integrations<br><br>Read the full case breakdown on how we optimize fulfillment. <b>Link in bio!</b><br><br>#SupplyChainCase #D2CIndia #OrderFulfillment #LogisticsSuccess #WarehouseMetrics",
+                comments: [
+                    { user: "d2cbrand_ceo", text: "Partnering with Genex completely resolved our third-quarter distribution bottlenecks." },
+                    { user: "ecom_operational_expert", text: "A 22% reduction while maintaining 98% SLA is world class." }
+                ]
+            },
+            {
+                id: 3,
+                badge: "Insights",
+                likes: 132,
+                commentsCount: 8,
+                title: "Logistics Industry Insights",
+                time: "1 week ago",
+                svg: `<svg class="post-vector" viewBox="0 0 200 200">
+                    <rect width="200" height="200" fill="#111827" rx="10"/>
+                    <circle cx="60" cy="70" r="6" fill="#10b981"/>
+                    <circle cx="140" cy="60" r="4" fill="#3897f0"/>
+                    <circle cx="120" cy="130" r="8" fill="#10b981"/>
+                    <circle cx="50" cy="140" r="5" fill="#3897f0"/>
+                    <path d="M 60 70 L 140 60 L 120 130 L 50 140 Z" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
+                    <path d="M 60 70 Q 100 50 140 60 Q 130 90 120 130 Q 80 140 50 140 Q 55 100 60 70" fill="none" stroke="#10b981" stroke-width="2" stroke-dasharray="4 3"/>
+                </svg>`,
+                caption: "🌐 <b>LOGISTICS TRENDS: The Shift to Decentralized Warehouses</b> 🌐<br><br>As consumer expectations shift to 1-day delivery cycles, centralized warehouse networks are becoming obsolete. To remain competitive, e-commerce giants and retail brands are moving to decentralized local hubs.<br><br>🧠 <b>Key Strategic Insights:</b><br>1. Local warehouses reduce transit cost by 30%.<br>2. Minimizes transit risks and logistics emissions.<br>3. Allows rapid product restocking to retail shelves.<br><br>Genex's multi-state pan-India hubs allow you to set up decentralized local inventory overnight. Talk to our logistics strategists to restructure. <b>Link in bio.</b><br><br>#SupplyChainInsights #WarehousingStrategy #ONDCIndia #FreightForwarding #IndiaLogistics",
+                comments: [
+                    { user: "logistics_advisor", text: "Spot-on analysis. Decentralization is no longer optional for retail leaders." }
+                ]
+            },
+            {
+                id: 4,
+                badge: "Tips",
+                likes: 167,
+                commentsCount: 11,
+                title: "Supply Chain Tips",
+                time: "1 week ago",
+                svg: `<svg class="post-vector" viewBox="0 0 200 200">
+                    <rect width="200" height="200" fill="#0f2d59" rx="10"/>
+                    <rect x="30" y="45" width="140" height="22" rx="4" fill="rgba(16, 185, 129, 0.2)" stroke="#10b981" stroke-width="1.5"/>
+                    <circle cx="45" cy="56" r="6" fill="#10b981"/>
+                    <rect x="65" y="52" width="90" height="8" rx="2" fill="#ffffff"/>
+                    <rect x="30" y="85" width="140" height="22" rx="4" fill="rgba(255, 255, 255, 0.05)" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
+                    <circle cx="45" cy="96" r="6" fill="rgba(255,255,255,0.15)"/>
+                    <rect x="65" y="92" width="90" height="8" rx="2" fill="#9ca3af"/>
+                </svg>`,
+                caption: "💡 <b>SUPPLY CHAIN TIPS: 3 Ways to Reduce Dead Inventory</b> 💡<br><br>Unsold inventory languishing in warehouse racks represents frozen capital. Optimize your supply chain efficiency using these three baseline tactics:<br><br>1️⃣ <b>Implement FIFO:</b> Essential for batch-controlled items.<br>2️⃣ <b>Real-time API inventory audits:</b> Eliminate manual spreadsheets.<br>3️⃣ <b>Consolidate warehouse hubs:</b> Reposition slow inventory closer to high-demand regions.<br><br>Genex’s WMS platforms give you complete transparency on slow-moving inventory. <b>Request a free logistics audit via link in bio!</b><br><br>#SupplyChainTips #InventoryAudit #3PLLinks #EcomTips #BusinessEfficiency",
+                comments: []
+            },
+            {
+                id: 5,
+                badge: "Team",
+                likes: 198,
+                commentsCount: 22,
+                title: "Team Culture",
+                time: "2 weeks ago",
+                svg: `<svg class="post-vector" viewBox="0 0 200 200">
+                    <rect width="200" height="200" fill="#070a13" rx="10"/>
+                    <circle cx="100" cy="80" r="30" fill="none" stroke="#10b981" stroke-width="3"/>
+                    <circle cx="100" cy="70" r="10" fill="#10b981"/>
+                    <path d="M 85 95 Q 100 82 115 95" fill="none" stroke="#10b981" stroke-width="3"/>
+                </svg>`,
+                caption: "🙌 <b>PEOPLE OF GENEX: Driving Logistics with Passion</b> 🙌<br><br>Meet the operations team at our Dwarka logistics park. Behind every automated sorting belt and on-time shipment confirmation is our dedicated, skilled workforce.<br><br>Safety and operational excellence are the bedrocks of Genex culture. With comprehensive training and structured career pathways, we ensure our team members grow alongside our clients' businesses.<br><br>#GenexCulture #LifeAtGenex #LogisticsJobs #SupplyChainCareers #WarehouseTeam",
+                comments: [
+                    { user: "amit_sharma_genex", text: "Proud to lead the operations team at Dwarka! Best safety standards in the industry." }
+                ]
+            },
+            {
+                id: 6,
+                badge: "Technology",
+                likes: 245,
+                commentsCount: 27,
+                title: "Technology in Logistics",
+                time: "2 weeks ago",
+                svg: `<svg class="post-vector" viewBox="0 0 200 200">
+                    <rect width="200" height="200" fill="#0f2d59" rx="10"/>
+                    <rect x="40" y="60" width="120" height="80" rx="6" fill="#070a13" stroke="rgba(255,255,255,0.1)" stroke-width="2"/>
+                    <line x1="55" y1="80" x2="55" y2="120" stroke="#ffffff" stroke-width="4"/>
+                    <line x1="68" y1="80" x2="68" y2="120" stroke="#ffffff" stroke-width="2"/>
+                    <line x1="78" y1="80" x2="78" y2="120" stroke="#ffffff" stroke-width="6"/>
+                    <line x1="102" y1="80" x2="102" y2="120" stroke="#ffffff" stroke-width="3"/>
+                    <line x1="112" y1="80" x2="112" y2="120" stroke="#ffffff" stroke-width="5"/>
+                    <line x1="138" y1="80" x2="138" y2="120" stroke="#ffffff" stroke-width="4"/>
+                    <line x1="30" y1="100" x2="170" y2="100" stroke="#ef4444" stroke-width="3" opacity="0.8"/>
+                </svg>`,
+                caption: "💻 <b>TECH INTEGRATION: Software-Driven Warehouse Management</b> 💻<br><br>At Genex, we view ourselves as a technology company that solves physical logistics. Every item entering our ecosystem receives unified barcode mapping, integrated instantly into our advanced WMS dashboard.<br><br>🚀 <b>How this benefits our partners:</b><br>• Real-time digital inventory level syncing<br>• 100% automated order picking validation<br>• Frictionless API connections with major e-commerce systems<br><br>#SupplyChainTech #WarehouseManagementSystem #WMS #EcomIntegrations #SmartLogistics",
+                comments: []
+            },
+            {
+                id: 7,
+                badge: "Case Studies",
+                likes: 211,
+                commentsCount: 16,
+                title: "Case Study Review",
+                time: "3 weeks ago",
+                svg: `<svg class="post-vector" viewBox="0 0 200 200">
+                    <rect width="200" height="200" fill="#111827" rx="10"/>
+                    <path d="M 40 150 L 80 110 L 120 130 L 160 70" fill="none" stroke="#10b981" stroke-width="4" stroke-linecap="round"/>
+                    <circle cx="160" cy="70" r="6" fill="#ffffff" stroke="#10b981" stroke-width="3"/>
+                </svg>`,
+                caption: "📦 <b>CASE ANALYSIS: Reducing Transit Overhead for Automotive Suppliers</b> 📦<br><br>Automotive logistics requires hyper-precise just-in-time delivery. A major component supplier faced recurring logistics delays and high detention fees.<br><br>🏆 <b>The Result:</b> Transit time cut by <b>28%</b>; logistics costs dropped by <b>15%</b> in under 90 days. Read the full case study via <b>link in bio!</b><br><br>#AutomotiveLogistics #CrossDocking #SupplyChainInnovation #EnterpriseLogistics #IndiaFreight",
+                comments: [
+                    { user: "auto_part_director", text: "Just-in-time logistics is hard to execute in India, but Genex team nailed it." }
+                ]
+            },
+            {
+                id: 8,
+                badge: "Statistics",
+                likes: 154,
+                commentsCount: 9,
+                title: "Industry Statistics",
+                time: "3 weeks ago",
+                svg: `<svg class="post-vector" viewBox="0 0 200 200">
+                    <rect width="200" height="200" fill="#0a192f" rx="10"/>
+                    <path d="M100 30 A 70 70 0 1 1 30 100 L 50 100 A 50 50 0 1 0 100 50 Z" fill="#10b981"/>
+                    <path d="M100 30 A 70 70 0 0 1 170 100 L 150 100 A 50 50 0 0 0 100 50 Z" fill="#3897f0"/>
+                </svg>`,
+                caption: "📊 <b>INDUSTRY STATS: The Rise of 3PL Outsourcing</b> 📊<br><br>Did you know? According to recent Indian supply chain studies, over <b>72%</b> of fast-growth enterprises outsource their warehousing to dedicated third-party logistics (3PL) partners rather than managing owned networks.<br><br>Focus on your product development; leave the distribution to the experts. <b>Link in bio to audit your shipping options!</b><br><br>#LogisticsStats #3PLMarket #SupplyChainGrowth #EcommerceIndia #BusinessConsultant",
+                comments: []
+            },
+            {
+                id: 9,
+                badge: "Testimonials",
+                likes: 189,
+                commentsCount: 15,
+                title: "Client Testimonial",
+                time: "1 month ago",
+                svg: `<svg class="post-vector" viewBox="0 0 200 200">
+                    <rect width="200" height="200" fill="#0f2d59" rx="10"/>
+                    <text x="30" y="60" fill="#10b981" font-size="60" font-family="serif">“</text>
+                    <rect x="30" y="70" width="140" height="6" fill="rgba(255,255,255,0.2)" rx="3"/>
+                    <rect x="30" y="85" width="140" height="6" fill="rgba(255,255,255,0.2)" rx="3"/>
+                    <text x="30" y="150" fill="#10b981" font-size="11" font-weight="bold">D2C BRAND FOUNDER</text>
+                </svg>`,
+                caption: "⭐ <b>CLIENT TESTIMONIAL: Partnership That Scales</b> ⭐<br><br>Hear directly from one of our rapidly scaling e-commerce partners:<br><br>💬 <i>\"Before partnering with Genex Logistics, order scaling was a nightmare. Our sorting accuracy was dropping during peak sales holidays. Genex migrated our operations to their multi-state WMS hub in under a week. Since then, we've scaled our order capacity 5x without a single shipping delay.\"</i><br><br>#LogisticsReview #ClientTestimonial #HappyPartners #B2BTrust #D2CFulfillment",
+                comments: [
+                    { user: "genex_logistics", text: "Proud to support your journey!" }
+                ]
+            },
+            {
+                id: 10,
+                badge: "Services",
+                likes: 143,
+                commentsCount: 6,
+                title: "Service Overview",
+                time: "1 month ago",
+                svg: `<svg class="post-vector" viewBox="0 0 200 200">
+                    <rect width="200" height="200" fill="#111827" rx="10"/>
+                    <rect x="25" y="25" width="65" height="65" rx="6" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                    <text x="57" y="62" fill="#10b981" font-size="10" text-anchor="middle" font-weight="700">3PL</text>
+                    <rect x="110" y="25" width="65" height="65" rx="6" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                    <text x="142" y="62" fill="#10b981" font-size="10" text-anchor="middle" font-weight="700">FREIGHT</text>
+                </svg>`,
+                caption: "📦 <b>OUR SERVICES: End-To-End Supply Chain Management</b> 📦<br><br>At Genex Logistics, we provide comprehensive contract logistics strategies tailored to your exact industry requirements. Our core services portfolio includes:<br><br>🔑 <b>Our Core Pillars:</b><br>• <b>Contract Logistics & 3PL:</b> Fully managed multi-state supply chains.<br>• <b>Warehousing & Distribution:</b> Smart inventory hubs located in prime nodes.<br>• <b>International Freight Forwarding:</b> Air and sea cargo networks.<br><br>#SupplyChainSolutions #FreightForwarding #IndiaWarehousing #ProjectLogistics #B2BServices",
+                comments: []
+            },
+            {
+                id: 11,
+                badge: "Network",
+                likes: 195,
+                commentsCount: 13,
+                title: "Transportation Network",
+                time: "1 month ago",
+                svg: `<svg class="post-vector" viewBox="0 0 200 200">
+                    <rect width="200" height="200" fill="#0f2d59" rx="10"/>
+                    <rect x="40" y="90" width="80" height="40" fill="#ffffff" rx="4"/>
+                    <rect x="120" y="100" width="30" height="30" fill="#10b981" rx="3"/>
+                    <circle cx="65" cy="140" r="10" fill="#111827" stroke="#ffffff" stroke-width="3"/>
+                    <line x1="20" y1="155" x2="180" y2="155" stroke="#10b981" stroke-width="4" stroke-linecap="round"/>
+                </svg>`,
+                caption: "🚛 <b>EXPRESS TRANSIT: Moving Cargo across 28 States</b> 🚛<br><br>Logistics is defined by speed, security, and tracking precision. Our transport fleets integrate GPS checkpoints and WMS sync, ensuring your cargo travels along optimized highway corridors.<br><br>#TransportIndia #ExpressLogistics #FreightNetwork #SupplyChainSecurity #ShippingTrucks",
+                comments: [
+                    { user: "procurement_director", text: "Your FTL coverage in secondary cities is highly reliable." }
+                ]
+            },
+            {
+                id: 12,
+                badge: "Milestones",
+                likes: 278,
+                commentsCount: 32,
+                title: "Growth Milestone",
+                time: "2 months ago",
+                svg: `<svg class="post-vector" viewBox="0 0 200 200">
+                    <rect width="200" height="200" fill="#070a13" rx="10"/>
+                    <circle cx="100" cy="100" r="65" fill="none" stroke="rgba(16, 185, 129, 0.1)" stroke-width="8"/>
+                    <circle cx="100" cy="100" r="65" fill="none" stroke="#10b981" stroke-width="8" stroke-dasharray="320 100"/>
+                    <text x="100" y="90" fill="#ffffff" font-size="28" font-weight="bold" text-anchor="middle" font-family="'Outfit', sans-serif">15+</text>
+                    <text x="100" y="118" fill="#10b981" font-size="11" font-weight="bold" text-anchor="middle">YEARS OF EXCELLENCE</text>
+                </svg>`,
+                caption: "🏆 <b>MILESTONE: Celebrating 15 Years of Supply Chain Innovation</b> 🏆<br><br>Founded in 2011 under the leadership of Mansingh Jaswal, Genex Logistics has grown from a local contractor into a leading pan-India 3PL powerhouse managing 800,000+ Sq.Ft. of warehousing space.<br><br>#GenexAnniversary #BusinessMilestone #15YearsOfTrust #SupplyChainLeaders #IndiaLogisticsPower",
+                comments: [
+                    { user: "industry_analyst", text: "Congratulations to Mansingh Jaswal and the entire Genex team!" }
+                ]
+            }
+        ];
+
+        // Chat messages database for simulated DM Inbox
+        const mockChats = [
+            {
+                id: "d2cbrand_ceo",
+                name: "d2cbrand_ceo (Rohan Malhotra)",
+                avatar: "RM",
+                unread: true,
+                messages: [
+                    { type: "incoming", text: "Hi Mansingh, Rohan here. I saw your Instagram post detailing how you scaled that apparel brand's distribution to 98.4% on-time delivery." },
+                    { type: "incoming", text: "We are running a fast-growing cosmetics D2C line. Our current Mumbai warehouse is failing to meet holiday demand. Can you guys support dynamic API order sync?" },
+                    { type: "outgoing", text: "Hi Rohan! Thanks for reaching out. Yes, absolutely. Our custom WMS integrates directly with Shopify, WooCommerce, and ONDC channels. We can map order pickings in real-time." },
+                    { type: "incoming", text: "Outstanding. Can we schedule a virtual site-walkthrough of your primary Delhi/Mumbai facilities?" },
+                    { type: "outgoing", text: "Sure thing! Tap the link in our profile bio or book directly on our website: genexlogistics.in/quote. Let's arrange it for tomorrow." }
+                ]
+            },
+            {
+                id: "retail_manager_del",
+                name: "retail_manager_del (Simran Kaur)",
+                avatar: "SK",
+                unread: true,
+                messages: [
+                    { type: "incoming", text: "Hello Genex team, do you offer temperature-controlled storage spaces for pharmaceutical components in your Dwarka logistics park?" },
+                    { type: "outgoing", text: "Hello Simran, yes. We operate cold-chain and climate-monitored warehouse zones conforming to strict ISO 9001 and WHO-GDP standards." },
+                    { type: "incoming", text: "Excellent. I will send our technical specification list. Can I get a freight forward price estimate as well?" }
+                ]
+            },
+            {
+                id: "procurement_head",
+                name: "procurement_head (Vikram Adani)",
+                avatar: "VA",
+                unread: false,
+                messages: [
+                    { type: "incoming", text: "Congrats on the 15-year anniversary milestone! Saw the post on my feed." },
+                    { type: "outgoing", text: "Thank you Vikram! We appreciate your partnership over the last 6 years." }
+                ]
+            }
+        ];
+
+        let activePostId = null;
+        let activeChatId = "d2cbrand_ceo";
+
+        // Switch panel display views
+        function switchPanel(panelId) {
+            document.querySelectorAll(".content-panel").forEach(p => p.classList.remove("active"));
+            document.querySelectorAll(".nav-link").forEach(l => l.classList.remove("active"));
+            document.querySelectorAll(".mobile-nav-link").forEach(ml => ml.classList.remove("active"));
+
+            document.getElementById(panelId).classList.add("active");
+
+            const activeLink = document.getElementById("link-" + panelId);
+            if (activeLink) activeLink.classList.add("active");
+            
+            const activeMobileLink = document.getElementById("mlink-" + panelId);
+            if (activeMobileLink) activeMobileLink.classList.add("active");
+
+            // Render specific panel assets
+            if (panelId === 'feed-panel') {
+                renderFeedPosts();
+            }
+        }
+
+        // Renders simulated Instagram Feed Timeline
+        function renderFeedPosts() {
+            const feedContainer = document.getElementById("feedPostsGrid");
+            feedContainer.innerHTML = "";
+
+            mockPosts.forEach(post => {
+                const card = document.createElement("div");
+                card.className = "feed-post-card";
+                card.innerHTML = `
+                    <div class="feed-post-header">
+                        <img src="profile-photo.jpg" alt="Profile pic" class="feed-post-avatar">
+                        <span class="feed-post-username">genex_logistics</span>
+                        <span class="verified-badge">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="#0095f6"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                        </span>
+                        <span class="feed-post-time">${post.time}</span>
+                    </div>
+                    <div class="feed-post-media" onclick="openPostModal(${post.id})">
+                        ${post.svg}
+                    </div>
+                    <div class="feed-post-actions">
+                        <div style="display:flex; gap:16px;">
+                            <button class="feed-action-btn" onclick="triggerAlert('Liked Post!')">
+                                <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                            </button>
+                            <button class="feed-action-btn" onclick="openPostModal(${post.id})">
+                                <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="feed-post-likes">${post.likes} likes</div>
+                    <div class="feed-post-caption-box">
+                        <b>genex_logistics</b> ${post.caption}
+                        <div class="feed-post-view-comments" onclick="openPostModal(${post.id})">
+                            View all ${post.commentsCount} comments
+                        </div>
+                    </div>
+                `;
+                feedContainer.appendChild(card);
+            });
+        }
+
+        // Renders Grid Layout posts
+        function renderPostsGrid() {
+            const grid = document.getElementById("postsGrid");
+            grid.innerHTML = "";
+
+            mockPosts.forEach(post => {
+                const card = document.createElement("div");
+                card.className = "post-card";
+                card.onclick = () => openPostModal(post.id);
+
+                card.innerHTML = `
+                    <div class="post-preview">
+                        ${post.svg}
+                        <span class="post-type-badge">${post.badge}</span>
+                        <div class="post-overlay">
+                            <div class="overlay-stat">
+                                <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                                <span id="overlay-likes-${post.id}">${post.likes}</span>
+                            </div>
+                            <div class="overlay-stat">
+                                <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                                <span>${post.commentsCount}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Renders B2B direct messages list
+        function renderChatsSidebar() {
+            const container = document.getElementById("chatListContainer");
+            container.innerHTML = "";
+
+            mockChats.forEach(chat => {
+                const li = document.createElement("li");
+                li.className = `inbox-list-item ${chat.id === activeChatId ? 'active' : ''}`;
+                li.onclick = () => selectChat(chat.id);
+
+                li.innerHTML = `
+                    <div class="chat-avatar">${chat.avatar}</div>
+                    <div class="chat-details">
+                        <div class="chat-name">
+                            <span>${chat.id}</span>
+                            ${chat.unread ? '<span class="chat-dot"></span>' : ''}
+                        </div>
+                        <div class="chat-preview">${chat.messages[chat.messages.length - 1].text}</div>
+                    </div>
+                `;
+                container.appendChild(li);
+            });
+        }
+
+        // Renders active DM conversation messages
+        function renderActiveChat() {
+            const chat = mockChats.find(c => c.id === activeChatId);
+            if (!chat) return;
+
+            document.getElementById("activeChatName").innerText = chat.name;
+            document.getElementById("activeChatAvatar").innerText = chat.avatar;
+
+            const body = document.getElementById("chatBodyContainer");
+            body.innerHTML = "";
+
+            chat.messages.forEach(msg => {
+                const bubble = document.createElement("div");
+                bubble.className = `message-bubble ${msg.type === 'incoming' ? 'msg-incoming' : 'msg-outgoing'}`;
+                bubble.innerHTML = msg.text;
+                body.appendChild(bubble);
+            });
+
+            // Scroll to chat bottom
+            body.scrollTop = body.scrollHeight;
+        }
+
+        function selectChat(chatId) {
+            activeChatId = chatId;
+            const chat = mockChats.find(c => c.id === chatId);
+            if (chat) chat.unread = false;
+
+            // Update badge totals
+            const unreadCount = mockChats.filter(c => c.unread).length;
+            const badge = document.getElementById("message-badge");
+            if (unreadCount > 0) {
+                badge.innerText = unreadCount;
+                badge.style.display = "flex";
+            } else {
+                badge.style.display = "none";
+            }
+
+            renderChatsSidebar();
+            renderActiveChat();
+        }
+
+        // Send simulated DM message
+        function sendSimulatedMessage(e) {
+            e.preventDefault();
+            const input = document.getElementById("chatMessageInput");
+            const text = input.value.trim();
+            if (!text) return;
+
+            const chat = mockChats.find(c => c.id === activeChatId);
+            if (chat) {
+                chat.messages.push({ type: "outgoing", text: text });
+                input.value = "";
+                renderActiveChat();
+                renderChatsSidebar();
+
+                // Trigger automated B2B sales client response script
+                setTimeout(() => {
+                    chat.messages.push({
+                        type: "incoming",
+                        text: "Understood. Our team will review the specifications today. Thanks for the quick response!"
+                    });
+                    renderActiveChat();
+                    renderChatsSidebar();
+                    triggerAlert("Simulated Client Response received!");
+                }, 1500);
+            }
+        }
+
+        // Open detailed Instagram post modal dialog
+        function openPostModal(postId) {
+            activePostId = postId;
+            const post = mockPosts.find(p => p.id === postId);
+            if (!post) return;
+
+            document.getElementById("modalMediaContainer").innerHTML = post.svg;
+            document.getElementById("modalCaptionTarget").innerHTML = post.caption;
+            document.getElementById("modalLikesMetricTarget").innerText = post.likes + " likes";
+            document.getElementById("modalTimeTarget").innerText = post.time;
+
+            const commentsContainer = document.getElementById("modalCommentsTarget");
+            commentsContainer.innerHTML = "";
+
+            post.comments.forEach(comment => {
+                const cDiv = document.createElement("div");
+                cDiv.className = "modal-comment-item";
+                cDiv.innerHTML = `
+                    <div style="font-size:0.85rem;">
+                        <span style="font-weight:700; margin-right:8px;">${comment.user}</span>
+                        <span>${comment.text}</span>
+                    </div>
+                `;
+                commentsContainer.appendChild(cDiv);
+            });
+
+            // Resets buttons states
+            document.getElementById("modalLikeBtn").classList.remove("active");
+            document.getElementById("modalSaveBtn").classList.remove("active");
+
+            document.getElementById("postModal").classList.add("active");
+        }
+
+        function closePostModal() {
+            document.getElementById("postModal").classList.remove("active");
+            activePostId = null;
+        }
+
+        // Liking posts within detail modal view
+        function togglePostLike() {
+            if (!activePostId) return;
+            const btn = document.getElementById("modalLikeBtn");
+            const post = mockPosts.find(p => p.id === activePostId);
+
+            if (btn.classList.contains("active")) {
+                btn.classList.remove("active");
+                post.likes--;
+                triggerAlert("Removed like from post.");
+            } else {
+                btn.classList.add("active");
+                post.likes++;
+                triggerAlert("Liked post! ❤️");
+            }
+
+            document.getElementById("modalLikesMetricTarget").innerText = post.likes + " likes";
+            const overlayLikes = document.getElementById(`overlay-likes-${post.id}`);
+            if (overlayLikes) overlayLikes.innerText = post.likes;
+        }
+
+        // Bookmark saving within modal
+        function togglePostSave() {
+            const btn = document.getElementById("modalSaveBtn");
+            if (btn.classList.contains("active")) {
+                btn.classList.remove("active");
+                triggerAlert("Post removed from saved collection.");
+            } else {
+                btn.classList.add("active");
+                triggerAlert("Post saved to collection! 📥");
+            }
+        }
+
+        // Share post simulation link copy
+        function sharePostSimulated() {
+            if (!activePostId) return;
+            navigator.clipboard.writeText(`https://www.instagram.com/genex_logistics/post/${activePostId}`)
+                .then(() => {
+                    triggerAlert("Copied simulated post link to clipboard!");
+                });
+        }
+
+        // Toast notifications
+        let toastTimeout = null;
+        function triggerAlert(message) {
+            const alertBox = document.getElementById("toastAlert");
+            const msgTarget = document.getElementById("toastMessageTarget");
+
+            clearTimeout(toastTimeout);
+            msgTarget.innerText = message;
+            alertBox.classList.add("show");
+
+            toastTimeout = setTimeout(() => {
+                alertBox.classList.remove("show");
+            }, 3000);
+        }
+
+        // Keyboard navigation and modal closing
+        window.onclick = function(e) {
+            const modal = document.getElementById("postModal");
+            if (e.target == modal) {
+                closePostModal();
+            }
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === "Escape") {
+                closePostModal();
+            }
+        });
+
+        // Initialize lists
+        window.onload = () => {
+            renderPostsGrid();
+            renderChatsSidebar();
+            renderActiveChat();
+        }
+    </script>
+</body>
+</html>
