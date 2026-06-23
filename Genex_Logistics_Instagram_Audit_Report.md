@@ -57,9 +57,8 @@ Current Handle: @genex_logistics
 *   **Recommendation:** Keep it as is to maintain consistency with domain names, but check availability of `@genexlogistics` (without the underscore) to prevent search leakage.
 
 #### Profile Photo Effectiveness
-*   **Current:** Standard full corporate logo.
-*   **Evaluation:** **Poor (5/10).** Because the logo contains the text "GENEX LOGISTICS" alongside the directional ball emblem, it is highly illegible when scaled down into Instagram's tiny circular avatar format (110x110 px).
-*   **Recommendation:** Update the profile picture to use **only the high-contrast directional ball and arrow emblem**, removing the wordmark. This increases visual impact, improves brand recall, and looks premium.
+*   **Current:** A square graphic featuring a lime-green background, a white circular disc, and a stylized green spiral icon forming the letter "G".
+*   **Evaluation:** **Good (8/10).** Because this asset is already an isolated emblem with zero text wordmarks, it completely avoids the typical legibility traps of small mobile screens. The high-contrast, minimalist swirl scales down beautifully into a 110x110 px circle.
 
 #### Bio Clarity & Value Proposition
 *   **Current:** Basic or missing corporate text.
