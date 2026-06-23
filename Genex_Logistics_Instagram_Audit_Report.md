@@ -47,7 +47,6 @@ The Instagram profile is the digital storefront for Genex Logistics. Currently, 
 
 ```
 Current Handle: @genex_logistics
-Target Link: https://www.instagram.com/genex_logistics?igsh=cWZzb2RqYXFxZjV3
 ```
 
 ### Audit Breakdown & Action Plan
